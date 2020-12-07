@@ -3,12 +3,15 @@ import pandas as pd
 import numpy as np
 
 DATA_URL = (
-"/home/rhyme/Desktop/Project/Motor_Vehicle_Collisions_-_Crashes.csv
+"/home/rhyme/Desktop/Project/Motor_Vehicle_Collisions_-_Crashes.csv"
 )
 
+# Title and markdown for web app
 st.title("Motor Vechile Collisions in NYC")
 st.markdown("Streamlit dashboard to monitor vechile collisions in NYC")
 
+# Write function to load data and clean up columns/data
+# Caching data so it doesn't reload every time
 @st.cache(persist=True)
 def load_data(nrows):
     data = pd.read_csv(DATA_URL, nrows = nrows, parse_dates = [['CRASH_DATE', 'CRASH_TIME']])
@@ -16,9 +19,19 @@ def load_data(nrows):
     lowercase = lambda x: str(x).lower()
     data.rename(lowercase, axis = 'columns', inplace=True)
     data.rename(columns={'crash_date_crash_time': "date/time"}, inplace=True)
-    return DATA_URL
+    return data
 
-data = load_data(10000)
+#Load first 100000 rows
+data = load_data(100000)
 
-st.subheader('Raw Data')
-st.write(data)
+st.header("Where are the most people injured in NYC?")
+injured = data['injured_persons']
+max_injured = int(injured.max())
+injured_people = st.slider("Number of Persons Injured in Vehicle Collisions",0, max_injured)
+st.map(data.query("injured_persons >= @injured_people")[["latitude", "longitude"]].dropna(how="any"))
+
+
+#Give option to display raw data on webapp
+if st.checkbox("Show Raw Data?", False):
+    st.subheader('Raw Data')
+    st.write(data)
