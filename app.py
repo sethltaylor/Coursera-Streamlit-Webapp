@@ -5,7 +5,7 @@ import pydeck as pdk
 import plotly.express as px
 
 DATA_URL = (
-"C:/Users/setht/OneDrive/Desktop/Coursera-Streamlit-Webapp/data/Motor_Vehicle_Collisions_-_Crashes.csv"
+"https://raw.githubusercontent.com/sethltaylor/Coursera-Streamlit-Webapp/main/Motor_Vehicle_Collisions_-_Crashes.csv"
 )
 
 # Title and markdown for web app
